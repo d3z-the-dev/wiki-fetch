@@ -5,10 +5,11 @@ from . import parts
 class Wiki():
 
     def __init__(self, lang: str = 'English') -> None:
-        self.langs = {'English': 'en'}
-        self.wiki = f"https://{self.langs[lang] if lang in self.langs else 'en'}.wikipedia.org/"
+        self.langs = {'English': 'en', 'Spanish': 'es', 'Ukrainian': 'uk'}
+        self.lang = self.langs[lang.title()] if lang.title() in self.langs else 'en'
+        self.wiki = f"https://{self.lang}.wikipedia.org/"
         self.headers = {
-            'User-Agent': f"Mozilla/5.0 (X11; U; Linux x86_64) Gecko/251022 Firefox/104.0"}
+            'User-Agent': f"Mozilla/5.0 (X11; U; Linux x86_64) Gecko/081222 Firefox/108.0"}
 
     def get(self, url: str) -> str | None:
         response: http.client.HTTPResponse = request.urlopen(

@@ -1,22 +1,10 @@
 # wiki-fetch
 
-<p>
-  <a href="https://github.com/d3z-the-dev/wiki-fetch/releases/">
-    <img alt="PyPI" src="https://img.shields.io/pypi/v/wiki-fetch" />
-  </a>
-  <a href="https://github.com/d3z-the-dev/wiki-fetch/releases/">
-    <img alt="PyPI Downloads" src="https://img.shields.io/pypi/dm/wiki-fetch" />
-  </a>
-  <a href="https://github.com/d3z-the-dev/wiki-fetch/releases/">
-    <img alt="Python Version" src="https://img.shields.io/pypi/pyversions/wiki-fetch" />
-  </a>
-  <a href="https://github.com/d3z-the-dev/wiki-fetch/releases/">
-    <img alt="License" src="https://img.shields.io/pypi/l/wiki-fetch" />
-  </a>
-  <a href="https://github.com/d3z-the-dev/wiki-fetch/releases/">
-    <img alt="Issues" src="https://img.shields.io/bitbucket/issues/d3z-the-dev/wiki-fetch" />
-  </a>
-</p>
+[![PyPI](https://img.shields.io/pypi/v/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/releases/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
+[![Python Version](https://img.shields.io/pypi/pyversions/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
+[![License](https://img.shields.io/pypi/l/wiki-fetch?color=272727)](https://en.wikipedia.org/wiki/MIT_License)
+[![Issues](https://img.shields.io/bitbucket/issues/d3z-the-dev/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/issues)
 
 ## Installation
 
@@ -53,7 +41,7 @@ wiki-fetch -q 'The Doors (band)' -p infobox -i first
 <details>
 <summary>output</summary>
 
-```text
+```yaml
 Infobox:
     The Doors:
         The Doors:
