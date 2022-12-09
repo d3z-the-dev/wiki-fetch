@@ -1,8 +1,9 @@
 # wiki-fetch
 
 [![PyPI](https://img.shields.io/pypi/v/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/releases/)
+[![Status](https://img.shields.io/pypi/status/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
-[![Python Version](https://img.shields.io/pypi/pyversions/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
+[![Python Version](https://img.shields.io/pypi/pyversions/wiki-fetch?color=%23244E71)](https://pypi.org/project/wiki-fetch/)
 [![License](https://img.shields.io/pypi/l/wiki-fetch?color=272727)](https://en.wikipedia.org/wiki/MIT_License)
 [![Issues](https://img.shields.io/bitbucket/issues/d3z-the-dev/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/issues)
 
@@ -76,13 +77,13 @@ Infobox:
 
 ### Python
 
-| Argument | Values                                                         | Description                         |
-| -------- | -------------------------------------------------------------- | ----------------------------------- |
-| url      | `str`                                                          | Any Wiki's page URL                 |
-| query    | `str`                                                          | Any query string                    |
-| lang     | `English`                                                      | Currently only English is available |
-| part     | `infobox`, `paragraph`, `table`, `list`, `thumb`, `toc`, `all` | Specify page part                   |
-| item     | `first`, `last`, `all`                                         | Specify the order of the part       |
+| Argument | Values                                                         | Description                     |
+| -------- | -------------------------------------------------------------- | ------------------------------- |
+| url      | `str`                                                          | Any Wiki's page URL             |
+| query    | `str`                                                          | Any query string                |
+| lang     | `str`                                                          | Any of available languages      |
+| part     | `infobox`, `paragraph`, `table`, `list`, `thumb`, `toc`, `all` | Specify page part               |
+| item     | `first`, `last`, `all`                                         | Specify the order of the part   |
 
 ```python
 from wiki_fetch.driver import Wiki

@@ -1,7 +1,8 @@
 name: Release
 
 on:
-  push:
+  # push:
+  workflow_dispatch:
     branches:
       - master
     tags:
