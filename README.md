@@ -5,7 +5,7 @@
 [![PyPI Downloads](https://img.shields.io/pypi/dm/wiki-fetch)](https://pypi.org/project/wiki-fetch/)
 [![Python Version](https://img.shields.io/pypi/pyversions/wiki-fetch?color=%23244E71)](https://pypi.org/project/wiki-fetch/)
 [![License](https://img.shields.io/pypi/l/wiki-fetch?color=272727)](https://en.wikipedia.org/wiki/MIT_License)
-[![Issues](https://img.shields.io/bitbucket/issues/d3z-the-dev/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/issues)
+[![Issues](https://img.shields.io/github/issues/d3z-the-dev/wiki-fetch)](https://github.com/d3z-the-dev/wiki-fetch/issues)
 
 ## Installation
 

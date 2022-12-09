@@ -1,11 +1,12 @@
 from .generic import *
 from . import parts
+from . import stuff
 
 
 class Wiki():
 
     def __init__(self, lang: str = 'English') -> None:
-        self.langs = {'English': 'en', 'Spanish': 'es', 'Ukrainian': 'uk'}
+        self.langs = stuff.languages
         self.lang = self.langs[lang.title()] if lang.title() in self.langs else 'en'
         self.wiki = f"https://{self.lang}.wikipedia.org/"
         self.headers = {

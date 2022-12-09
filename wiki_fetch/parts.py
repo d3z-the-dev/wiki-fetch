@@ -38,8 +38,9 @@ class Infobox(Parser):
                 row = ROW(label=label); section = DICT(); order = 0
                 continue
             if not label:
+                previous = tr.find_previous('tr')
                 if len(data) > 1 and ':' in data[0]: label = data.pop(0)
-                elif (image := tr.find_previous('tr').select_one('.image')): label = 'Image caption'
+                elif previous and (image := previous.select_one('.image')): label = 'Image caption'
                 elif (image := tr.select_one('.image')): label = 'Image title'
                 if image: section |= DICT({f"Image {order + 1}": f"https:{image.find('img').get('src')}"})
                 if not label: label = f"line {order + 1}"
