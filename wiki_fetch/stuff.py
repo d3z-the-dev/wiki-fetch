@@ -1,25 +1,19 @@
 languages = {
-  'English': 'en',
-  'Ukrainian': 'uk',
-  'Українська': 'uk',
-  'Russian': 'ru',
-  'Русский': 'ru',
-  'Polish': 'pl',
-  'Polski': 'pl',
-  'German': 'de',
-  'Deutsch': 'de',
-  'Nederlands': 'nl',
-  'Dutch': 'nl',
-  'Swedish': 'sv',
-  'Svenska': 'sv',
-  'Spanish': 'es',
-  'Español': 'es',
-  'French': 'fr',
-  'Français': 'fr',
-  'Italian': 'it',
-  'Italiano': 'it',
-  'Japanese': 'ja',
-  'Chainese': 'zh',
-  'Cebuano': 'ceb',
-  'Bisaya': 'ceb'
+  'en': ['English'],
+  'uk': ['Ukrainian', 'Українська'],
+  'ru': ['Russian', 'Русский'],
+  'pl': ['Polish', 'Polski'],
+  'de': ['German', 'Deutsch'],
+  'nl': ['Nederlands', 'Dutch'],
+  'sv': ['Swedish', 'Svenska'],
+  'es': ['Spanish', 'Español'],
+  'fr': ['French', 'Français'],
+  'it': ['Italian', 'Italiano'],
+  'ja': ['Japanese'],
+  'zh': ['Chainese'],
+  'ceb': ['Cebuano', 'Bisaya'],
 }
+
+linguist = lambda lang: lang if (lang := lang.lower()) in languages else list(
+    languages.keys())[list(languages.values()).index(value[0])] if (value := [
+    value for value in list(languages.values()) if lang.title() in value]) else 'en'

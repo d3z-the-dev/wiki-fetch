@@ -71,8 +71,6 @@ Infobox:
                 John Densmore
             Website: thedoors.com
 ```
-
-
 </details>
 
 ### Python

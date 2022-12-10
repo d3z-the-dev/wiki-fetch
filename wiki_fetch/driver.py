@@ -6,9 +6,7 @@ from . import stuff
 class Wiki():
 
     def __init__(self, lang: str = 'English') -> None:
-        self.langs = stuff.languages
-        self.lang = self.langs[lang.title()] if lang.title() in self.langs else 'en'
-        self.wiki = f"https://{self.lang}.wikipedia.org/"
+        self.wiki = f"https://{stuff.linguist(lang)}.wikipedia.org/"
         self.headers = {
             'User-Agent': f"Mozilla/5.0 (X11; U; Linux x86_64) Gecko/081222 Firefox/108.0"}
 
