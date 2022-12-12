@@ -1,7 +1,7 @@
 import re
 from json import dumps
 from urllib import request
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 from unicodedata import normalize
 from typing import Tuple, Dict, NamedTuple, TypedDict, TypeAlias, MutableMapping
 
@@ -23,7 +23,7 @@ class PAGE(NamedTuple):
     content: ELEMENT = None
 
 class TAG(NamedTuple):
-    name: str | list[str]
+    name: str | list[str] = None
     attr: str | None = None
     value: str | None = None
     recursive: bool = True

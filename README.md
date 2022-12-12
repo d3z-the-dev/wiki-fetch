@@ -46,8 +46,8 @@ wiki-fetch -q 'The Doors (band)' -p infobox -i first
 Infobox:
     The Doors:
         The Doors:
-            Image 1: https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Doors_1968.JPG/250px-The_Doors_1968.JPG
-            Image title: The Doors in 1966: Morrison (left), Densmore (centre), Krieger (right) and Manzarek (seated)
+            Image: https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Doors_1968.JPG/250px-The_Doors_1968.JPG
+            Caption: The Doors in 1966: Morrison (left), Densmore (centre), Krieger (right) and Manzarek (seated)
         Background information:
             Origin: Los Angeles, California, U.S.
             Genres:
@@ -98,8 +98,8 @@ print(output.json)
     "Infobox": {
         "The Doors": {
             "The Doors": {
-                "Image 1": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Doors_1968.JPG/250px-The_Doors_1968.JPG",
-                "Image title": "The Doors in 1966: Morrison (left), Densmore (centre), Krieger (right) and Manzarek (seated)"
+                "Image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/The_Doors_1968.JPG/250px-The_Doors_1968.JPG",
+                "Caption": "The Doors in 1966: Morrison (left), Densmore (centre), Krieger (right) and Manzarek (seated)"
             },
             "Background information": {
                 "Origin": "Los Angeles, California, U.S.",

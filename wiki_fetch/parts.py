@@ -28,6 +28,8 @@ class Infobox(Parser):
             elif td:
                 self.prepare(elements=td, tag=TAG(name='br'), replacer='&&')
                 data = td.text.split('&&')
+                if order <= 2 and (image := td.select_one('.image')):
+                    section |= DICT({'Image': f"https:{image.find('img').get('src')}"})
             elif tds:
                 data = [td.text for td in tds]
             label = self.clean(label)
@@ -38,12 +40,8 @@ class Infobox(Parser):
                 row = ROW(label=label); section = DICT(); order = 0
                 continue
             if not label:
-                previous = tr.find_previous('tr')
                 if len(data) > 1 and ':' in data[0]: label = data.pop(0)
-                elif previous and (image := previous.select_one('.image')): label = 'Image caption'
-                elif (image := tr.select_one('.image')): label = 'Image title'
-                if image: section |= DICT({f"Image {order + 1}": f"https:{image.find('img').get('src')}"})
-                if not label: label = f"line {order + 1}"
+                if not label and len(section) > 0 and list(section.keys())[-1] == 'Image': label = 'Caption'
             section |= DICT({label: data[0] if len(data) == 1 else tuple(data)})
             order += 1
         table = update(table, update(row, CELL(section)))
@@ -57,11 +55,16 @@ class Infobox(Parser):
             self.prepare(elements=element, tag=TAG(name='span', attr='class', value='noprint'))
             self.prepare(elements=element, tag=TAG(name='span', attr='style', value='display:none'))
             self.prepare(elements=element, tag=TAG(name='small'))
+            self.prepare(elements=element, tag=TAG(attr='class', value='infobox-below'))
             for order, inner in enumerate(self.extract(element=element)):
                 if (title := inner.label) not in [row.label for row in nested]: label = title 
                 else: label = f"{title} {order + 1}"
                 nested += (ROW(label=label, cells=(CELL(data=inner.data()[title]),)),)
-            table = self.parse(element.find_all('tr'))
+            if (caption := element.select_one('caption.infobox-title')):
+                tr = HTML('<tr></tr>', 'html.parser'); caption.name = 'th'; tr.tr.insert(0, caption)
+                table = self.parse([tr.find('tr')] + [tr for tr in element.find_all('tr')])
+            else:
+                table = self.parse(element.find_all('tr'))
             table = update(table, nested)
             yield table
 

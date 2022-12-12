@@ -16,4 +16,4 @@ languages = {
 
 linguist = lambda lang: lang if (lang := lang.lower()) in languages else list(
     languages.keys())[list(languages.values()).index(value[0])] if (value := [
-    value for value in list(languages.values()) if lang.title() in value]) else 'en'
+    value for value in languages.values() if lang.title() in value]) else 'en'

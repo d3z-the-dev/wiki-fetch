@@ -45,7 +45,8 @@ class Wiki():
         self.page = self.capture(url)
         Parts = ('Infobox', 'Paragraph', 'Table', 'List', 'Thumb', 'Toc',)
         [self.output.update({part: getter(part, item)}) for part in Parts
-            ] if part == 'all' else self.output.update({part.title(): getter(part, item)})        
+            ] if part == 'all' else self.output.update({part.title(): getter(part, item)})
+        self.output |= {'URL': unquote(self.page.url)}
         return OUTPUT(
             dict=self.output,
             json=(json := dumps(self.output, indent=4, ensure_ascii=False, allow_nan=True)),
