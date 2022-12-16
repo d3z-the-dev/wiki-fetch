@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "wiki-fetch"
-version = "0.0.5"
+version = "0.0.8"
 description = "Parser for Wikipedia.org"
 authors = ["d3z <d3z.the.dev@gmail.com>"]
-license = "MIT"
+license = "Apache-2.0"
 readme = "README.md"
 homepage = "https://github.com/d3z-the-dev/wiki-fetch"
 repository = "https://github.com/d3z-the-dev/wiki-fetch"
@@ -17,11 +17,11 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Typing :: Typed",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Wiki",
-    "License :: OSI Approved :: MIT License",
+    "License :: OSI Approved :: Apache Software License",
 	"Development Status :: 2 - Pre-Alpha",
 ]
 include = [
-    "LICENSE",
+    "LICENSE.md",
 ]
 
 [tool.poetry.scripts]

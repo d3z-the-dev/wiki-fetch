@@ -6,7 +6,7 @@ class Infobox(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name='table', attr='class', value='infobox', recursive=False)
+        self.tag = TAG(name='table', attrs={'class': ['infobox', 'infobox_v2']}, recursive=False)
         self.init()
 
     def extract(self, element: ELEMENT) -> TABLE:
@@ -16,8 +16,12 @@ class Infobox(Parser):
 
     def parse(self, elements: ELEMENTS) -> TABLE:
         table = TABLE(); row = ROW(); section = DICT(); order = 0
+        stower = lambda row, section: (update(row, CELL(section)) if len(
+            section) > 1 or len(section) == 1 and type(list(section.keys())[0]) != int else update(
+            row, CELL(list(section.values()))) if len(section) == 1 and type(
+            list(section.keys())[0]) == int else row) if section else row
         for tr in elements:
-            if type(tr) != ELEMENT: continue
+            if type(tr) != ELEMENT or not tr.text.strip(): continue
             label, data = '', ()
             ths, tds, th, td, ul = self.derive(tr)
             if th: 
@@ -26,36 +30,43 @@ class Infobox(Parser):
             if ul:
                 data = [li.text.title() for li in ul.find_all('li')]
             elif td:
-                self.prepare(elements=td, tag=TAG(name='br'), replacer='&&')
-                data = td.text.split('&&')
                 if order <= 2 and (image := td.select_one('.image')):
                     section |= DICT({'Image': f"https:{image.find('img').get('src')}"})
+                if td.find_all('br'):
+                    self.prepare(elements=td, tag=TAG(name='br'), replacer='&&')
+                    data = td.text.split('&&')
+                elif next(td.children).name in ['div', 'span', 'time']:
+                    data = [td.text.strip()]
+                elif len((anchors := td.find_all('a', recursive=False))) > 1:
+                    data = [anchor.text for anchor in anchors]
+                else: data = [td.text.strip()]
             elif tds:
                 data = [td.text for td in tds]
             label = self.clean(label)
             data = [clear for line in data if (clear := self.clean(line))]
             if not label and not data: continue
-            if label and th and not td or not tds and not data:
-                table = update(table, (row := update(row, CELL(section)))) if row.label else table
-                row = ROW(label=label); section = DICT(); order = 0
-                continue
             if not label:
                 if len(data) > 1 and ':' in data[0]: label = data.pop(0)
                 if not label and len(section) > 0 and list(section.keys())[-1] == 'Image': label = 'Caption'
-            section |= DICT({label: data[0] if len(data) == 1 else tuple(data)})
+            if not label and len(data) == 1: label = data[0]; data = []
+            if label and th and not td or not tds and not data:
+                table = update(table, row) if (row := stower(row, section)).label else table
+                row = ROW(label=label); section = DICT(); order = 0
+                continue
+            section |= DICT({label if label else order + 1: data[0] if len(data) == 1 else tuple(data)})
             order += 1
-        table = update(table, update(row, CELL(section)))
-        table = rename(table, table.rows[0].label)
-        table = delete(table, 'rows', 0) if not table.rows[0].cells[0].data else table
+        table = update(table, row) if (row := stower(row, section)).label else table
+        table = rename(table, table.rows[0].label) if table.length() else table
         return table
 
     def gather(self, elements: ELEMENTS) -> TABLE:
         for element in elements:
             nested = ROWS()
-            self.prepare(elements=element, tag=TAG(name='span', attr='class', value='noprint'))
-            self.prepare(elements=element, tag=TAG(name='span', attr='style', value='display:none'))
+            self.prepare(elements=element, tag=TAG(name='span', attrs={'class': 'noprint'}))
+            self.prepare(elements=element, tag=TAG(name='span', attrs={'style': 'display:none'}))
+            self.prepare(elements=element, tag=TAG(name='td', attrs={'class': 'navigation-only'}))
             self.prepare(elements=element, tag=TAG(name='small'))
-            self.prepare(elements=element, tag=TAG(attr='class', value='infobox-below'))
+            self.prepare(elements=element, tag=TAG(attrs={'class': 'infobox-below'}))
             for order, inner in enumerate(self.extract(element=element)):
                 if (title := inner.label) not in [row.label for row in nested]: label = title 
                 else: label = f"{title} {order + 1}"
@@ -80,7 +91,7 @@ class Paragraph(Parser):
         row = None; header = 'Prologue'; headline = 'Prologue'; paragraphs = TUPLE()
         for order, element in enumerate(elements):
             if type(element) != ELEMENT: continue
-            self.prepare(elements=element, tag=TAG(name='span', attr='class', value='noprint'))
+            self.prepare(elements=element, tag=TAG(name='span', attrs={'class': 'noprint'}))
             self.prepare(elements=element, tag=TAG(name='small'))
             text = self.clean(element.text)
             if element.name == 'p':
@@ -104,7 +115,7 @@ class Table(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name='table', attr='class', value='wikitable', recursive=True)
+        self.tag = TAG(name='table', attrs={'class': 'wikitable'}, recursive=True)
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:
@@ -171,7 +182,7 @@ class Thumb(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name='div', attr='class', value='thumb', recursive=False)
+        self.tag = TAG(name='div', attrs={'class': 'thumb'}, recursive=False)
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:
@@ -193,7 +204,7 @@ class Toc(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name='div', attr='id', value='toc', recursive=False)
+        self.tag = TAG(name='div', attrs={'id': 'toc'}, recursive=False)
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:

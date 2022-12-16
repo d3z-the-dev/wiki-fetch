@@ -24,8 +24,7 @@ class PAGE(NamedTuple):
 
 class TAG(NamedTuple):
     name: str | list[str] = None
-    attr: str | None = None
-    value: str | None = None
+    attrs: dict | None = None
     recursive: bool = True
 
 class SCOPE(NamedTuple):
@@ -44,6 +43,7 @@ class ROW(NamedTuple):
     index: int = 1
     label: str | None = None
     cells: CELLS = CELLS()
+    length = lambda self: len(self.cells)
     scope = lambda self: None if not self.cells else SCOPE(
         row=max(cell.scope.row for cell in self.cells),
         col=sum(cell.scope.col for cell in self.cells))
@@ -55,6 +55,7 @@ class ROWS(Tuple[ROW]): pass
 class TABLE(NamedTuple):
     label: str | None = None
     rows: ROWS = ROWS()
+    length = lambda self: len(self.rows)
     scope = lambda self: None if not self.rows else SCOPE(
         row=sum(row.scope().row for row in self.rows),
         col=max(row.scope().col for row in self.rows))

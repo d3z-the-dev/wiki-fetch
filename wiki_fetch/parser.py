@@ -36,8 +36,8 @@ class Parser():
         if isinstance(elements, ELEMENT): elements = (elements,)
         for element in elements:
             if not isinstance(element, ELEMENT): continue
-            for tag in element.find_all(tag.name, {tag.attr: tag.value}
-                    ) if tag.attr and tag.value else element.find_all(tag.name):
+            for tag in element.find_all(tag.name, tag.attrs
+                    ) if tag.attrs else element.find_all(tag.name):
                 tag.replace_with(replacer) if replacer else tag.extract()
 
     def derive(self, tr: ELEMENT) -> tuple[ELEMENT | ELEMENTS]:
@@ -60,9 +60,8 @@ class Parser():
         if not page: return None
         self.heading: str = self.clean(page.html.find('h1').text)
         self.elements: ELEMENTS = page.content.find_all(
-            tag.name, {tag.attr: tag.value}, recursive=tag.recursive
-            ) if tag.attr and tag.value else page.content.find_all(
-                tag.name, recursive=tag.recursive)
+            tag.name, attrs=tag.attrs, recursive=tag.recursive
+            ) if tag.attrs else page.content.find_all(tag.name, recursive=tag.recursive)
 
     def manage(self) -> None:
         for table in self.gather(self.elements):
