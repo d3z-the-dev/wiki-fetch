@@ -204,7 +204,7 @@ class Toc(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name='div', attrs={'id': 'toc'}, recursive=False)
+        self.tag = TAG(name='div', attrs={'id': 'toc'}, recursive=True)
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:

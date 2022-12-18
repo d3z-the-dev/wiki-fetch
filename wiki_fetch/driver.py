@@ -40,7 +40,7 @@ class Wiki():
         getter = lambda part, item: parts.__dict__[part.title()](page=self.page).__dict__[item]
         texter = lambda json: '\n'.join([line[4:] for line in re.sub(
             r'\",|\"|\},|\{|\}|\],|\[|\]', '', json).split('\n') if line.strip()])
-        if not url and not query: return OUTPUT(text='there is no input data (query string or URL)')
+        if not url and not query: return OUTPUT(text='There is no input data (query string or URL).')
         if query: url = f"{self.wiki}?search={quote(query.title())}"
         self.page = self.capture(url)
         Parts = ('Infobox', 'Paragraph', 'Table', 'List', 'Thumb', 'Toc',)

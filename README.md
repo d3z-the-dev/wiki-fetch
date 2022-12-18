@@ -27,13 +27,14 @@ pip install ./dist/*.whl
 
 ### CLI
 
-| Option           | Flag | Long      | Default | Example                                   |
-| ---------------- | ---- | --------- | ------- | ----------------------------------------- |
-| Wiki's page link | `-u` | `--url`   | None    | <https://en.wikipedia.org/wiki/The_Doors> |
-| Search query     | `-q` | `--query` | None    | The Doors (band)                          |
-| Page language    | `-l` | `--lang`  | English | English                                   |
-| Part of the page | `-p` | `--part`  | all     | infobox                                   |
-| Parts by order   | `-i` | `--item`  | all     | first                                     |
+| Option           | Flag | Long       | Default | Example                                   |
+| ---------------- | ---- | ---------- | ------- | ----------------------------------------- |
+| Wiki's page link | `-u` | `--url`    | None    | <https://en.wikipedia.org/wiki/The_Doors> |
+| Search query     | `-q` | `--query`  | None    | The Doors (band)                          |
+| Page language    | `-l` | `--lang`   | English | English                                   |
+| Part of the page | `-p` | `--part`   | all     | infobox                                   |
+| Parts by order   | `-i` | `--item`   | all     | first                                     |
+| Output format    | `-o` | `--output` | text    | text                                      |
 
 ```bash
 wiki-fetch -q 'The Doors (band)' -p infobox -i first
