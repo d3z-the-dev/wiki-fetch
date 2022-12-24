@@ -12,7 +12,7 @@ class Infobox(Parser):
     def extract(self, element: ELEMENT) -> TABLE:
         for inner in element.find_all(self.tag.name):
             inner.extract()
-            yield self.parse(inner.find_all('tr'))
+            yield next(self.parse(inner.find_all('tr')))
 
     def parse(self, elements: ELEMENTS) -> TABLE:
         table = TABLE(); row = ROW(); section = DICT(); order = 0
@@ -41,7 +41,7 @@ class Infobox(Parser):
                     data = [anchor.text for anchor in anchors]
                 else: data = [td.text.strip()]
             elif tds:
-                data = [td.text for td in tds]
+                data = [self.clean(td.text) for td in tds]
             label = self.clean(label)
             data = [clear for line in data if (clear := self.clean(line))]
             if not label and not data: continue
@@ -57,7 +57,7 @@ class Infobox(Parser):
             order += 1
         table = update(table, row) if (row := stower(row, section)).label else table
         table = rename(table, table.rows[0].label) if table.length() else table
-        return table
+        yield table
 
     def gather(self, elements: ELEMENTS) -> TABLE:
         for element in elements:
@@ -73,9 +73,10 @@ class Infobox(Parser):
                 nested += (ROW(label=label, cells=(CELL(data=inner.data()[title]),)),)
             if (caption := element.select_one('caption.infobox-title')):
                 tr = HTML('<tr></tr>', 'html.parser'); caption.name = 'th'; tr.tr.insert(0, caption)
-                table = self.parse([tr.find('tr')] + [tr for tr in element.find_all('tr')])
+                table = next(self.parse([tr.find('tr')] + [tr for tr in element.find_all('tr')]))
             else:
-                table = self.parse(element.find_all('tr'))
+
+                table = next(self.parse(element.find_all('tr')))
             table = update(table, nested)
             yield table
 

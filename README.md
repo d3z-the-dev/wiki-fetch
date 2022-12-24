@@ -27,6 +27,10 @@ pip install ./dist/*.whl
 
 ### CLI
 
+<table>
+<tr><th>Options for use in console</th></tr>
+<tr><td>
+
 | Option           | Flag | Long       | Default | Example                                   |
 | ---------------- | ---- | ---------- | ------- | ----------------------------------------- |
 | Wiki's page link | `-u` | `--url`    | None    | <https://en.wikipedia.org/wiki/The_Doors> |
@@ -35,6 +39,9 @@ pip install ./dist/*.whl
 | Part of the page | `-p` | `--part`   | all     | infobox                                   |
 | Parts by order   | `-i` | `--item`   | all     | first                                     |
 | Output format    | `-o` | `--output` | text    | text                                      |
+    
+</td></tr>
+</table>
 
 ```bash
 wiki-fetch -q 'The Doors (band)' -p infobox -i first
@@ -79,6 +86,10 @@ URL: https://en.wikipedia.org/?search=The Doors (Band)
 
 ### Python
 
+<table>
+<tr><th>Arguments of function and class</th></tr>
+<tr><td>
+    
 | Argument | Values                                                         | Description                     |
 | -------- | -------------------------------------------------------------- | ------------------------------- |
 | url      | `str`                                                          | Any Wiki's page URL             |
@@ -87,10 +98,13 @@ URL: https://en.wikipedia.org/?search=The Doors (Band)
 | part     | `infobox`, `paragraph`, `table`, `list`, `thumb`, `toc`, `all` | Specify page part               |
 | item     | `first`, `last`, `all`                                         | Specify the order of the part   |
 
+</td></tr>
+</table>
+
 ```python
 from wiki_fetch.driver import Wiki
 
-output = Wiki().search(query='The Doors (band)', part='infobox', item='first')
+output = Wiki(lang='English').search(query='The Doors (band)', part='infobox', item='first')
 print(output.json)
 ```
 
@@ -143,3 +157,37 @@ print(output.json)
 }
 ```
 </details>
+
+## Specification
+    
+<table>
+<tr><th>Available options</th><th> FAQ ? </th></tr>
+<tr><td>
+
+| Parts of page | Output formats | Language       |
+| ------------- | -------------- | -------------- |
+| `infobox`     | `text`         | `English`      |
+| `paragraph`   | `json`         | `Ukrainian`    |
+| `table`       | `dict`         | `Russian`      |
+| `list`        |                | `Polish`       |
+| `thumb`       |                | `German`       |
+| `toc`         |                | `Nederlands`   |
+|               |                | `Swedish`      |
+|               |                | `Spanish`      |
+|               |                | `French`       |
+|               |                | `Italian`      |
+|               |                | `Japanese`     |
+|               |                | `Chainese`     |
+|               |                | `Cebuano`      |
+
+</td><td>
+
+- If you find a bug or a shortage of functionality - create an issue with examples.
+- If it is necessary to add missing languages, you can create an issue or make a fork and add a language to 'languages' variable in stuff.py file. Languages must be supported by Wikipedia.org.
+- If you want to add an output format - create an issue with a description of the implementation. Implementation should contain only standard Python libraries.
+- If you see the need in adding certain tests - you can create an issue with descriptive examples.
+- If you have suggestions about the development of the project - you are welcome, create an issue with propose.
+- If you don't like the style of naming variables - go ~~fuck~~ yourself.
+
+</td></tr>
+</table>

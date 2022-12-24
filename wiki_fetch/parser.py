@@ -22,7 +22,7 @@ class Parser():
     def clean(self, string: str, mode: str = 'content') -> str:
         if mode == 'content':
             replacers = {'"':'', '\u200b': '', '\u2013': '-', '[edit]': '', '\n': ' '}
-            string = re.sub(r'\[\d*\]', '', normalize('NFKD', string))
+            string = re.sub(r'\[\d*\]|\[\.\.\.\]', '', normalize('NFKD', string))
         elif mode == 'href':
             replacers = {'_':' ', '#': ''}
         for chars, replacer in replacers.items(): string = string.replace(chars, replacer)
