@@ -9,75 +9,90 @@ class Infobox(Parser):
         self.tag = TAG(name='table', attrs={'class': ['infobox', 'infobox_v2']}, recursive=False)
         self.init()
 
-    def extract(self, element: ELEMENT) -> TABLE:
-        for inner in element.find_all(self.tag.name):
+    def extract(self, element: ELEMENT) -> ELEMENTS:
+        for inner in (nested := element.find_all(self.tag.name)):
             inner.extract()
-            yield next(self.parse(inner.find_all('tr')))
+        return nested if nested else ()
 
     def parse(self, elements: ELEMENTS) -> TABLE:
         table = TABLE(); row = ROW(); section = DICT(); order = 0
-        stower = lambda row, section: (update(row, CELL(section)) if len(
-            section) > 1 or len(section) == 1 and type(list(section.keys())[0]) != int else update(
-            row, CELL(list(section.values()))) if len(section) == 1 and type(
-            list(section.keys())[0]) == int else row) if section else row
-        for tr in elements:
-            if type(tr) != ELEMENT or not tr.text.strip(): continue
+
+        def stower(row: ROW, section: DICT) -> ROW:
+            dicts: dict[DICT] = {}; order = 0
+            for key, value in zip(section.keys(), section.values()):
+                if type(key) == int and type(value) in (list, tuple):
+                    for line in value: dicts |= DICT({order + 1: line}); order += 1
+                else: dicts |= DICT({key: value}); order += 1
+            return update(row, CELL(dicts)) if section else row
+
+        for line, tr in enumerate(elements):
+            if type(tr) != ELEMENT: continue
             label, data = '', ()
             ths, tds, th, td, ul = self.derive(tr)
-            if th: 
+            if th:
                 self.prepare(elements=th, tag=TAG(name='br'), replacer='&&')
-                label = text[0] if ':' in th.text else ' '.join((text := th.text.split('&&')))
+                label = ' '.join(th.text.split('&&'))
             if ul:
                 data = [li.text.title() for li in ul.find_all('li')]
+            if tds:
+                data = [td.text for td in tds]
             elif td:
-                if order <= 2 and (image := td.select_one('.image')):
+                if order <= 2 and (image := td.find(attrs={'class': 'image'})):
                     section |= DICT({'Image': f"https:{image.find('img').get('src')}"})
+                    if (caption := td.find(attrs={'class': 'infobox-caption'})):
+                        section |= DICT({'Caption': self.clean(caption.text)})
+                    if image or caption: order += 1; continue
+                if 'class' in td.attrs and 'plainlist' in td['class']:
+                    if (child := td.find('div', recursive=False)):
+                        for div in [self.clean(div.text) for div in child.find_all('div', recursive=False)]:
+                            if len((pair := div.split(':'))) > 1: section |= DICT({pair[0]: pair[1]})
+                            else: section |= DICT({div: ''})
+                        if div: continue
                 if td.find_all('br'):
                     self.prepare(elements=td, tag=TAG(name='br'), replacer='&&')
-                    data = td.text.split('&&')
-                elif next(td.children).name in ['div', 'span', 'time']:
-                    data = [td.text.strip()]
-                elif len((anchors := td.find_all('a', recursive=False))) > 1:
-                    data = [anchor.text for anchor in anchors]
-                else: data = [td.text.strip()]
-            elif tds:
-                data = [self.clean(td.text) for td in tds]
+                    if not data: data = td.text.split('&&')
+                if len((anchors := td.find_all('a', recursive=False))) > 2:
+                    if not data: data = [anchor.text for anchor in anchors]
+                if next(td.children).name in ['div', 'span', 'time']:
+                    if not data: data = [td.text.strip()]
+                if not data: data = [td.text.strip()]
             label = self.clean(label)
             data = [clear for line in data if (clear := self.clean(line))]
             if not label and not data: continue
             if not label:
-                if len(data) > 1 and ':' in data[0]: label = data.pop(0)
-                if not label and len(section) > 0 and list(section.keys())[-1] == 'Image': label = 'Caption'
-            if not label and len(data) == 1: label = data[0]; data = []
+                if len(section) > 0 and list(section.keys())[-1] == 'Image': label = 'Caption'
+                if len(data) >= 2 and ':' in data[0]: label = data.pop(0).replace(':', '')
+                if not label and len(data) >= 1: label = order + 1
             if label and th and not td or not tds and not data:
-                table = update(table, row) if (row := stower(row, section)).label else table
-                row = ROW(label=label); section = DICT(); order = 0
-                continue
-            section |= DICT({label if label else order + 1: data[0] if len(data) == 1 else tuple(data)})
+                if (row := stower(row, section)) and row.label:
+                    if row.cells or order != 0: table = update(table, row)
+                row = ROW(label=label); section = DICT(); order = 0; continue
+            section |= DICT({label: data[0] if len(data) == 1 else tuple(data)})
             order += 1
         table = update(table, row) if (row := stower(row, section)).label else table
-        table = rename(table, table.rows[0].label) if table.length() else table
         yield table
 
     def gather(self, elements: ELEMENTS) -> TABLE:
+        unpacker = lambda table: ((trs := [tr for tr in table.find('tbody').find_all('tr')]),
+            self.clean(caption.text) if (caption := table.select_one('caption.infobox-title')
+                ) else self.clean((th := trs[0].find('th')).text) if trs else None)
+
         for element in elements:
-            nested = ROWS()
             self.prepare(elements=element, tag=TAG(name='span', attrs={'class': 'noprint'}))
             self.prepare(elements=element, tag=TAG(name='span', attrs={'style': 'display:none'}))
             self.prepare(elements=element, tag=TAG(name='td', attrs={'class': 'navigation-only'}))
             self.prepare(elements=element, tag=TAG(name='small'))
             self.prepare(elements=element, tag=TAG(attrs={'class': 'infobox-below'}))
-            for order, inner in enumerate(self.extract(element=element)):
-                if (title := inner.label) not in [row.label for row in nested]: label = title 
-                else: label = f"{title} {order + 1}"
-                nested += (ROW(label=label, cells=(CELL(data=inner.data()[title]),)),)
-            if (caption := element.select_one('caption.infobox-title')):
-                tr = HTML('<tr></tr>', 'html.parser'); caption.name = 'th'; tr.tr.insert(0, caption)
-                table = next(self.parse([tr.find('tr')] + [tr for tr in element.find_all('tr')]))
-            else:
-
-                table = next(self.parse(element.find_all('tr')))
-            table = update(table, nested)
+            nested = self.extract(element=element)
+            trs, header = unpacker(element)
+            table = merge(TABLE(label=header), next(self.parse(trs)))
+            for order, inner in enumerate(nested):
+                trs, header = unpacker(inner)
+                inner = merge(TABLE(label=header), next(self.parse(trs)))
+                if header not in [row.label for row in table.rows]: label = header 
+                else: label = f"{header} {order + 1}"
+                row = ROW(label=label, cells=(CELL(data=inner.data()[header]),))
+                if row: table = update(table, row)
             yield table
 
 
@@ -89,27 +104,35 @@ class Paragraph(Parser):
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:
-        row = None; header = 'Prologue'; headline = 'Prologue'; paragraphs = TUPLE()
+        table = TABLE(); row = None; paragraphs = TUPLE(); header = 'Prologue'; headline = 'Prologue'
         for order, element in enumerate(elements):
             if type(element) != ELEMENT: continue
             self.prepare(elements=element, tag=TAG(name='span', attrs={'class': 'noprint'}))
+            self.prepare(elements=element, tag=TAG(name='span', attrs={'class': 'mw-editsection'}))
             self.prepare(elements=element, tag=TAG(name='small'))
             text = self.clean(element.text)
             if element.name == 'p':
                 if text: paragraphs += (text,)
-            elif element.name == 'h3':
-                row = ROW(label=headline, cells=(CELL(paragraphs),))
+            if element.name == 'h3':
+                if row and row.label: table = update(table, row)
+                if paragraphs: row = ROW(label=headline, cells=(CELL(paragraphs),))
                 headline = text
                 paragraphs = TUPLE()
-            elif element.name == 'h2':
-                if not row:
-                    row = ROW(label=headline, cells=(CELL(paragraphs),))
-                yield TABLE(label=header, rows=(row,))
-                header = text
+            if element.name == 'h2':
+                table = rename(table, header)
+                if row: table = update(table, row)
+                if paragraphs:
+                    if not headline:
+                        for order, paragraph in enumerate(paragraphs):
+                            table = update(table, ROW(label=order + 1, cells=(CELL(paragraph),)))
+                    else:
+                        table = update(table, ROW(label=headline, cells=(CELL(paragraphs),)))
+                yield table
+                header = text; table = TABLE(); row = None; paragraphs = TUPLE(); headline = None
 
     def gather(self, elements: ELEMENTS) -> TABLE:
         for table in self.parse(elements):
-            if table.rows[0].cells[0].data: yield table
+            if table.rows: yield table
 
 
 class Table(Parser):

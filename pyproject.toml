@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wiki-fetch"
-version = "0.0.9"
+version = "0.1.0"
 description = "Parser for Wikipedia.org"
 authors = ["d3z <d3z.the.dev@gmail.com>"]
 license = "Apache-2.0"
@@ -18,7 +18,7 @@ classifiers = [
     "Typing :: Typed",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Wiki",
     "License :: OSI Approved :: Apache Software License",
-	"Development Status :: 2 - Pre-Alpha",
+	"Development Status :: 3 - Alpha",
 ]
 include = [
     "LICENSE.md",

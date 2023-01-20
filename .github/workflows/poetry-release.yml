@@ -5,7 +5,7 @@ on:
     branches:
       - master
     tags:
-      - '0.0.9'
+      - '0.1.0'
 
 jobs:
   release:
@@ -42,7 +42,7 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          tag: '0.0.9'
+          tag: '0.1.0'
           artifacts: "dist/*"
           token: ${{ secrets.GH_API_TOKEN }}
           draft: false
