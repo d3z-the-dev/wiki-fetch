@@ -21,6 +21,7 @@ class PAGE(NamedTuple):
     url: str
     html: HTML
     content: ELEMENT = None
+    parser: ELEMENT = None
 
 class TAG(NamedTuple):
     name: str | list[str] = None

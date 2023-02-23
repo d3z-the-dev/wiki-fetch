@@ -17,7 +17,7 @@ class Infobox(Parser):
     def parse(self, elements: ELEMENTS) -> TABLE:
         table = TABLE(); row = ROW(); section = DICT(); order = 0
 
-        def stower(row: ROW, section: DICT) -> ROW:
+        def packer(row: ROW, section: DICT) -> ROW:
             dicts: dict[DICT] = {}; order = 0
             for key, value in zip(section.keys(), section.values()):
                 if type(key) == int and type(value) in (list, tuple):
@@ -64,12 +64,12 @@ class Infobox(Parser):
                 if len(data) >= 2 and ':' in data[0]: label = data.pop(0).replace(':', '')
                 if not label and len(data) >= 1: label = order + 1
             if label and th and not td or not tds and not data:
-                if (row := stower(row, section)) and row.label:
+                if (row := packer(row, section)) and row.label:
                     if row.cells or order != 0: table = update(table, row)
                 row = ROW(label=label); section = DICT(); order = 0; continue
             section |= DICT({label: data[0] if len(data) == 1 else tuple(data)})
             order += 1
-        table = update(table, row) if (row := stower(row, section)).label else table
+        table = update(table, row) if (row := packer(row, section)).label else table
         yield table
 
     def gather(self, elements: ELEMENTS) -> TABLE:
@@ -100,7 +100,7 @@ class Paragraph(Parser):
 
     def __init__(self, page: PAGE) -> None:
         Parser.__init__(self, page=page)
-        self.tag = TAG(name=['h2', 'h3', 'p'], recursive=False)
+        self.tag = TAG(name=['h2', 'h3', 'h4', 'p'], recursive=False)
         self.init()
 
     def parse(self, elements: ELEMENTS) -> TABLE:
@@ -113,7 +113,7 @@ class Paragraph(Parser):
             text = self.clean(element.text)
             if element.name == 'p':
                 if text: paragraphs += (text,)
-            if element.name == 'h3':
+            if element.name in ['h3', 'h4']:
                 if row and row.label: table = update(table, row)
                 if paragraphs: row = ROW(label=headline, cells=(CELL(paragraphs),))
                 headline = text

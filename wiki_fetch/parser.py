@@ -58,10 +58,11 @@ class Parser():
         if not tag: tag = self.tag
         if not page: page = self.page
         if not page: return None
-        self.heading: str = self.clean(page.html.find('h1').text)
-        self.elements: ELEMENTS = page.content.find_all(
+        self.header: str | None = self.clean(header.text) if (
+            header := page.content.select_one('header h1')) else None
+        self.elements: ELEMENTS = page.parser.find_all(
             tag.name, attrs=tag.attrs, recursive=tag.recursive
-            ) if tag.attrs else page.content.find_all(tag.name, recursive=tag.recursive)
+            ) if tag.attrs else page.parser.find_all(tag.name, recursive=tag.recursive)
 
     def manage(self) -> None:
         for table in self.gather(self.elements):

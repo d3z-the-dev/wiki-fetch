@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "wiki-fetch"
-version = "0.1.0"
+version = "0.1.1"
 description = "Parser for Wikipedia.org"
 authors = ["d3z <d3z.the.dev@gmail.com>"]
 license = "Apache-2.0"

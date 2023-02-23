@@ -8,7 +8,7 @@ class Wiki():
     def __init__(self, lang: str = 'English') -> None:
         self.wiki = f"https://{stuff.linguist(lang)}.wikipedia.org/"
         self.headers = {
-            'User-Agent': f"Mozilla/5.0 (X11; U; Linux x86_64) Gecko/081222 Firefox/108.0"}
+            'User-Agent': f"Mozilla/5.0 (X11; U; Linux x86_64) Gecko/230223 Firefox/110.0"}
 
     def get(self, url: str) -> str | None:
         response: http.client.HTTPResponse = request.urlopen(
@@ -30,10 +30,11 @@ class Wiki():
         elif catlinks and 'Disambiguation pages' in [li.text for li in catlinks.find('ul')]:
             href = [a.get('href') for a in contents.find_all('a') if a.get('href').startswith('/wiki/')][0]
             url = f"{self.wiki}{href}"
-        html = self.extract(self.get(url)) if resuslts or catlinks else html
-        body = html.select_one('#bodyContent')
-        content = body.select_one('.mw-parser-output') if body else None
-        return PAGE(url=url, html=html, content=content)
+        html = self.extract(self.get(url)) if resuslts or catlinks else html        
+        content = html.select_one('#content')
+        text = content.select_one('#mw-content-text') if content else None
+        parser = text.select_one('.mw-parser-output') if text else None
+        return PAGE(url=url, html=html, content=content, parser=parser)
 
     def search(self, query: str = None, url: str = None, part: str = None, item: str = None) -> dict:
         self.output = dict()

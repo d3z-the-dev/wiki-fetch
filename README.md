@@ -161,7 +161,7 @@ print(output.json)
 ## Specification
     
 <table>
-<tr><th>Available options</th><th> FAQ ? </th></tr>
+<tr><th>Available options</th></tr>
 <tr><td>
 
 | Parts of page | Output formats | Language       |
@@ -179,15 +179,6 @@ print(output.json)
 |               |                | `Japanese`     |
 |               |                | `Chainese`     |
 |               |                | `Cebuano`      |
-
-</td><td>
-
-- If you find a bug or a shortage of functionality - create an issue with examples.
-- If it is necessary to add missing languages, you can create an issue or make a fork and add a language to 'languages' variable in stuff.py file. Languages must be supported by Wikipedia.org.
-- If you want to add an output format - create an issue with a description of the implementation. Implementation should contain only standard Python libraries.
-- If you see the need in adding certain tests - you can create an issue with descriptive examples.
-- If you have suggestions about the development of the project - you are welcome, create an issue with propose.
-- If you don't like the style of naming variables - go ~~fuck~~ yourself.
 
 </td></tr>
 </table>
