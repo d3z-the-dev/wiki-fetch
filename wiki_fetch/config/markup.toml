@@ -1,0 +1,23 @@
+[selectors]
+content = '#content'
+body = '#mw-content-text'
+parser = '.mw-parser-output'
+infobox = 'table.infobox'
+heading = 'div.mw-heading'
+wikitable = 'table.wikitable'
+figure = 'figure[typeof^="mw:File"]'
+file = 'a.mw-file-description'
+figcaption = 'figcaption'
+search = '.mw-search-results'
+result = '.mw-search-result-heading'
+noise = '.noprint, .mw-editsection, sup.reference, style, .metadata, .navbox'
+
+[classes]
+above = 'infobox-above'
+label = 'infobox-label'
+caption = 'infobox-caption'
+
+[chrome]
+tags = ['table', 'figure']
+classes = ['navbox', 'vertical-navbox', 'sidebar']
+identifiers = ['catlinks']

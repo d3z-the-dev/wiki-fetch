@@ -1,0 +1,13 @@
+[policy]
+timeout = 10.0
+hops = 5
+attempts = 3
+backoff = 0.5
+
+[client]
+agent = 'wiki-fetch/1.0 (+https://github.com/d3z-the-dev/wiki-fetch)'
+accept = 'text/html,application/xhtml+xml'
+encodings = 'gzip, deflate'
+
+[limits]
+prefix = 4096

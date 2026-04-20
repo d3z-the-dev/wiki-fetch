@@ -1,0 +1,4 @@
+indent = 4
+missing = 'null'
+newline = "\n"
+mark = ': '

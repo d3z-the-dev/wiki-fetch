@@ -1,0 +1,7 @@
+[address]
+host = 'https://{language}.wikipedia.org/'
+search = '?search={query}'
+key = 'URL'
+
+[defaults]
+language = 'English'
