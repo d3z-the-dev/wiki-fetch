@@ -1,39 +1,60 @@
-[tool.poetry]
+[project]
 name = "wiki-fetch"
-version = "0.1.1"
-description = "Parser for Wikipedia.org"
-authors = ["d3z <d3z.the.dev@gmail.com>"]
-license = "Apache-2.0"
+version = "1.0.0"
+description = "Wikipedia parser for Python and the CLI. Dependency-free."
 readme = "README.md"
-homepage = "https://github.com/d3z-the-dev/wiki-fetch"
-repository = "https://github.com/d3z-the-dev/wiki-fetch"
-keywords = ["parser", "wiki", "wikipedia", "web scraping"]
+license = "Apache-2.0"
+license-files = ["LICENSE.md"]
+requires-python = ">=3.12"
+authors = [{ name = "d3z", email = "d3z.the.dev@gmail.com" }]
+keywords = ["parser", "wiki", "wikipedia", "scraping", "stdlib"]
+dependencies = []
 classifiers = [
-    "Operating System :: OS Independent",
+    "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
-    "Natural Language :: English",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Typing :: Typed",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content :: Wiki",
-    "License :: OSI Approved :: Apache Software License",
-	"Development Status :: 3 - Alpha",
-]
-include = [
-    "LICENSE.md",
+    "Typing :: Typed",
 ]
 
-[tool.poetry.scripts]
-wiki-fetch = "wiki_fetch.__main__:run"
+[project.urls]
+Homepage = "https://github.com/d3z-the-dev/wiki-fetch"
+Repository = "https://github.com/d3z-the-dev/wiki-fetch"
+Issues = "https://github.com/d3z-the-dev/wiki-fetch/issues"
 
-[tool.poetry.dependencies]
-python = "^3.10"
-bs4 = "^0.0.1"
+[project.scripts]
+wiki-fetch = "wiki_fetch.cli.app:run"
 
-[tool.poetry.dev-dependencies]
-pytest = "^5.2"
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.14"]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C4", "SIM", "RET", "ARG", "PTH", "TID", "RUF", "ANN", "PL"]
+ignore = ["ANN401", "C408", "UP007", "UP018", "UP045"]
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["ANN", "ARG", "PLR2004"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers -m 'not network'"
+markers = [
+    "network: hits live Wikipedia",
+    "golden: full-output comparison",
+]
